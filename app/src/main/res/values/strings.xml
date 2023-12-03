@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">panopticon-app</string>
+    <string name="app_name">panopticon</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="get_started">Get Started</string>
+    <string name="cd_ic_logo">ic logo</string>
+    <string name="welcome_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In orci mauris, accumsan et porttitor eget, imperdiet ultrices libero. </string>
 </resources>
