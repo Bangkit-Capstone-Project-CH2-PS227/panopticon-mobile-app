@@ -4,6 +4,169 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_theme_light_secondary_10"
+    tools:theme="@style/Theme.Material3.Light.NoActionBar"
     tools:context=".ui.register.RegisterActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:src="@drawable/top"
+        android:rotation="180"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/tv_login_title"
+            style="@style/TextContent.Title"
+            android:layout_height="42dp"
+            android:text="REGISTER"
+
+            />
+
+        <TextView
+            android:id="@+id/tv_login_subtitle"
+            style="@style/TextContent"
+            android:text="Create your new account"
+            android:textSize="15sp"
+
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_layout_fullName"
+            style="@style/InputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            android:hint="Fullname"
+            app:startIconDrawable="@drawable/ic_baseline_person_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_fullName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="text"
+                android:textColor="@color/md_theme_light_primary_90"
+                android:textColorHint="@color/md_theme_light_primary_90"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_layout_email"
+            style="@style/InputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:startIconDrawable="@drawable/ic_baseline_email_24">
+
+            <com.rizkyizh.panopticon.ui.custom.CustomEmailTextInput
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/md_theme_light_primary_90"
+                android:textColorHint="@color/md_theme_light_primary_90"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_layout_password"
+            style="@style/InputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_layout_email"
+            app:startIconDrawable="@drawable/ic_baseline_lock_24">
+
+            <com.rizkyizh.panopticon.ui.custom.CustomPasswordTextInput
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPassword"
+                android:textColor="@color/md_theme_light_primary_90"
+                android:textColorHint="@color/md_theme_light_primary_90" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_register"
+            style="@style/ButtonColorPrimer"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:text="Register"
+            android:enabled="false"
+            android:alpha="0"
+            app:layout_constraintEnd_toEndOf="@id/tv_login_title"
+            app:layout_constraintStart_toStartOf="@id/tv_login_title"
+            app:layout_constraintTop_toBottomOf="@id/et_layout_password" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/tv_login_title"
+            app:layout_constraintStart_toStartOf="@id/tv_login_title"
+            app:layout_constraintTop_toBottomOf="@id/btn_login">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Already have an account? "
+                android:textAlignment="center"
+                android:textColor="@color/md_theme_light_primary_90"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/btn_register_to_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Login"
+                android:textAlignment="center"
+                android:textColor="@color/md_theme_light_primary_40"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
