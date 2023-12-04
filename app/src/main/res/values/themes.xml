@@ -18,16 +18,43 @@
 
     </style>
 
+
+
+    <style name="InputText" parent="Widget.Material3.TextInputEditText.OutlinedBox.Dense">
+        <item name="errorTextColor">@color/md_theme_light_error_80</item>
+        <item name="boxStrokeErrorColor">@color/md_theme_light_error_80</item>
+        <item name="errorIconTint">@color/md_theme_light_error_80</item>
+        <item name="startIconCheckable">false</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:layout_marginStart">52dp</item>
+        <item name="android:layout_marginEnd">52dp</item>
+    </style>
+
+
     <style name="TextContent">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/md_theme_light_primary_90</item>
     </style>
+
     <style name="TextContent.Reguler">
         <item name="android:fontFamily">@font/poppins_regular</item>
     </style>
 
-    <style name="ButtonColorPrimer" parent="Theme.AppCompat.Light.NoActionBar" >
+    <style name="TextContent.Bold">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+    </style>
+
+    <style name="TextContent.Title">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+
+
+    <style name="ButtonColorPrimer" parent="Theme.Panopticonapp" >
         <item name="android:background">@drawable/gradient_button_selector</item>
         <item name="android:paddingStart">40dp</item>
         <item name="android:paddingEnd">40dp</item>
@@ -36,4 +63,6 @@
         <item name="android:fontFamily">@font/poppins_bold</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+
 </resources>

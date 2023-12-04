@@ -28,4 +28,12 @@
     </shape>
 </item>
 
+    <item android:state_enabled="false">
+        <shape>
+            <!-- Gradien untuk tombol dinonaktifkan -->
+            <solid android:color="#A0A0A0" />  <!-- Warna tetap saat dinonaktifkan -->
+            <corners android:radius="8dp" />  <!-- Radius sudut (opsional) -->
+        </shape>
+    </item>
+
 </selector>

@@ -11,4 +11,5 @@
     <color name="md_theme_light_primary_40">#6750A4</color>
     <color name="md_theme_light_primary_90">#EADDFF</color>
     <color name="md_theme_light_secondary_10" >#1D192B</color>
+    <color name="md_theme_light_error_80">#F2B8B5</color>
 </resources>
