@@ -16,4 +16,5 @@
     <color name="md_theme_light_error_80">#F2B8B5</color>
     <color name="md_theme_light_primary_30">#4F378B</color>
     <color name="md_theme_light_primary_50">#7F67BE</color>
+    <color name="md_theme_light_dialog_layout_color">#2B2930</color>
 </resources>
