@@ -8,4 +8,6 @@
     <string name="welcome_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In orci mauris, accumsan et porttitor eget, imperdiet ultrices libero. </string>
     <string name="welcome_back">WELCOME BACK</string>
     <string name="login_to_your_account">Login to your account</string>
+    <string name="generate_token">generate token</string>
+    <string name="title_profile">Profile</string>
 </resources>

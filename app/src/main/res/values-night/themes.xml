@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Panopticonapp" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.Panopticonapp" parent="Theme.MaterialComponents">
 
     </style>
 </resources>
