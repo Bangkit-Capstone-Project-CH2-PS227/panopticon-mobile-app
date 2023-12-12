@@ -92,14 +92,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btn_register"
-        style="@style/ButtonColorPrimer"
+        android:id="@+id/btn_join"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:paddingStart="40dp"
         android:paddingEnd="40dp"
         android:layout_marginTop="24dp"
-        android:text="join"
+        android:text="JOIN"
         app:layout_constraintStart_toStartOf="@id/et_layout_token"
         app:layout_constraintEnd_toEndOf="@id/et_layout_token"
         app:layout_constraintTop_toBottomOf="@id/et_layout_token"
