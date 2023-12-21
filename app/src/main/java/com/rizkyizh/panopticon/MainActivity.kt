@@ -97,6 +97,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
+        const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
     }
 }
