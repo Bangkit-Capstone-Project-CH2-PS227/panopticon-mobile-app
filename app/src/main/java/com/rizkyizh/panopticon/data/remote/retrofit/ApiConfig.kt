@@ -1,5 +1,6 @@
 package com.rizkyizh.panopticon.data.remote.retrofit
 
+import com.rizkyizh.panopticon.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

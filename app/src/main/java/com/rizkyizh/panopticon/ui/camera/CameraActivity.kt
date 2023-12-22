@@ -14,7 +14,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.rizkyizh.panopticon.MainActivity
 import com.rizkyizh.panopticon.databinding.ActivityCameraBinding
-import org.tensorflow.lite.support.label.Category
 import java.util.concurrent.Executors
 
 class CameraActivity : AppCompatActivity() {
@@ -62,21 +61,21 @@ class CameraActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onResults(results: Category?, inferenceTime: Long) {
+                override fun onResults(results: Float, inferenceTime: Long) {
                     runOnUiThread {
-                        results?.let { it ->
+                        results.let { it ->
                             Log.d("RESULT", it.toString())
-//                            if (it.isNotEmpty()) {
-//                                println(it)
-//                                Log.d("RESULT", it.toString())
-////                                val sortedCategories =
-////                                    it[0].categories.sortedByDescending { it?.score }
-////                                val displayResult =
-////                                    sortedCategories.joinToString("\n") {
-////                                        "${it.label} " + NumberFormat.getPercentInstance().format(it.score).trim()
-////                                    }
-////                                binding.tvResult.text = displayResult
-//                            }
+                    //                            if (it.isNotEmpty()) {
+                    //                                println(it)
+                    //                                Log.d("RESULT", it.toString())
+                    ////                                val sortedCategories =
+                    ////                                    it[0].categories.sortedByDescending { it?.score }
+                    ////                                val displayResult =
+                    ////                                    sortedCategories.joinToString("\n") {
+                    ////                                        "${it.label} " + NumberFormat.getPercentInstance().format(it.score).trim()
+                    ////                                    }
+                    ////                                binding.tvResult.text = displayResult
+                    //                            }
                         }
                     }
                 }

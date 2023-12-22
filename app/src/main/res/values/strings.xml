@@ -10,4 +10,5 @@
     <string name="login_to_your_account">Login to your account</string>
     <string name="generate_token">generate token</string>
     <string name="title_profile">Profile</string>
+    <string name="nama_user_dummy">nama user</string>
 </resources>

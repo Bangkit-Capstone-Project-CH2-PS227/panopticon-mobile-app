@@ -1,21 +1,29 @@
 package com.rizkyizh.panopticon.ui.register
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.activity.viewModels
 import com.rizkyizh.panopticon.R
+import com.rizkyizh.panopticon.data.remote.request.RegisterRequest
 import com.rizkyizh.panopticon.databinding.ActivityRegisterBinding
+import com.rizkyizh.panopticon.helper.ViewModelFactory
 import com.rizkyizh.panopticon.helper.isValidEmail
-import com.rizkyizh.panopticon.ui.login.LoginActivity
+import com.rizkyizh.panopticon.helper.Result
+import com.rizkyizh.panopticon.helper.simpleAlertDialog
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
 
     private var isEmailInputValid = false
+
+
+    private val viewModel by viewModels<RegisterViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,14 +33,13 @@ class RegisterActivity : AppCompatActivity() {
         setupView()
 
 
-        binding.btnRegisterToLogin.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
 
+
+        // to login page
+        binding.btnRegisterToLogin.setOnClickListener {
+           // val intent = Intent(this, LoginActivity::class.java)
             finish()
         }
-
-
-
     }
 
     private fun setupView(){
@@ -103,6 +110,48 @@ class RegisterActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {}
         })
+
+        binding.btnRegister.setOnClickListener {
+            val registerRequest = RegisterRequest(
+                name = nameEditText.text.toString(),
+                email = emailEditText.text.toString(),
+                password = passwordEditText.text.toString()
+            )
+            viewModel.registerUser(registerRequest) { result ->
+                when (result) {
+                    is Result.Loading -> {
+                        showLoading(true)
+                    }
+                    is Result.Success -> {
+                        showLoading(false)
+                        if (result.data.msg == "Register berhasil"){
+                            if (!isFinishing) {
+                                runOnUiThread {
+                                    simpleAlertDialog(
+                                        context = this,
+                                        toPreviousActivity = true,
+                                        title = "Selamat",
+                                        message = "Akun anda berhasil didaftarkan, silahkan login"
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    is Result.Error -> {
+                        showLoading(false)
+                        runOnUiThread {
+                            simpleAlertDialog(
+                                context = this,
+                                toPreviousActivity = false,
+                                title = "Oops!",
+                                message =  "ada masalah dengan server"
+                            )
+                        }
+                    }
+                    is Result.ErrorMessage -> {}
+                }
+            }
+        }
     }
 
     private fun setButtonLoginEnable() {
@@ -120,6 +169,12 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
 
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        runOnUiThread {
+            binding.progressCircular.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
 }

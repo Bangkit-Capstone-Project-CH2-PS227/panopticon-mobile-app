@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_bold"
-        android:text="Rizki Izzul Haq"
+        android:text="@string/nama_user_dummy"
         android:textAlignment="center"
         android:textColor="@color/md_theme_light_primary_90"
         android:textSize="16dp"

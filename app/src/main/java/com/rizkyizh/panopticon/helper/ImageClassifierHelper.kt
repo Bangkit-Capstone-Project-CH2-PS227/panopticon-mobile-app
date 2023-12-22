@@ -2,94 +2,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.media.Image
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
-import android.view.Surface
 import androidx.camera.core.ImageProxy
-import com.rizkyizh.panopticon.ml.BestFloat32
+import com.rizkyizh.panopticon.ml.PanopticNET
 import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
-import org.tensorflow.lite.support.label.Category
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import org.tensorflow.lite.task.core.vision.ImageProcessingOptions
 import java.nio.ByteBuffer
-
-//class ImageClassifierHelper(
-//    var threshold: Float = 0.1f,
-//    var maxResults: Int = 3,
-//    var numThreads: Int = 4,
-//    val modelName: String = "mobilenet_v1_1.0_224_quantized_1_metadata_1.tflite",
-//    val context: Context,
-//    val imageClassifierListener: ClassifierListener?
-//) {
-//    private var imageClassifier: ImageClassifier? = null
-//
-//    init {
-//        setupImageClassifier()
-//    }
-//
-//    fun setupImageClassifier() {
-//        val optionsBuilder = ImageClassifier.ImageClassifierOptions.builder()
-//            .setScoreThreshold(threshold)
-//            .setMaxResults(maxResults)
-//        val baseOptionsBuilder = BaseOptions.builder().setNumThreads(numThreads)
-//        optionsBuilder.setBaseOptions(baseOptionsBuilder.build())
-//        try {
-//            imageClassifier =
-//                ImageClassifier.createFromFileAndOptions(context, modelName, optionsBuilder.build())
-//        } catch (e: IllegalStateException) {
-//            imageClassifierListener?.onError(
-//                "Image classifier failed to initialize. See error logs for details"
-//            )
-//            Log.e("ImageClassifierHelper", "TFLite failed to load model with error: " + e.message)
-//        }
-//    }
-//
-//    fun classify(image: ImageProxy) {
-//        if (imageClassifier == null) {
-//            setupImageClassifier()
-//        }
-//        val bitmapBuffer = Bitmap.createBitmap(
-//            image.width,
-//            image.height,
-//            Bitmap.Config.ARGB_8888
-//        )
-//        image.use { bitmapBuffer.copyPixelsFromBuffer(image.planes[0].buffer) }
-//        image.close()
-//
-//        var inferenceTime = SystemClock.uptimeMillis()
-//        val imageProcessor = ImageProcessor.Builder().build()
-//        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(bitmapBuffer))
-//
-//        val imageProcessingOptions = ImageProcessingOptions.builder()
-//            .setOrientation(getOrientationFromRotation(image.imageInfo.rotationDegrees))
-//            .build()
-//
-//        val results = imageClassifier?.classify(tensorImage, imageProcessingOptions)
-//        inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-//        imageClassifierListener?.onResults(
-//            results,
-//            inferenceTime
-//        )
-//    }
-//    private fun getOrientationFromRotation(rotation: Int): ImageProcessingOptions.Orientation {
-//        return when (rotation) {
-//            Surface.ROTATION_270 -> ImageProcessingOptions.Orientation.BOTTOM_RIGHT
-//            Surface.ROTATION_180 -> ImageProcessingOptions.Orientation.RIGHT_BOTTOM
-//            Surface.ROTATION_90 -> ImageProcessingOptions.Orientation.TOP_LEFT
-//            else -> ImageProcessingOptions.Orientation.RIGHT_TOP
-//        }
-//    }
-//    interface ClassifierListener {
-//        fun onError(error: String)
-//        fun onResults(
-//            results: List<Classifications>?,
-//            inferenceTime: Long
-//        )
-//    }
-//}
 
 
 class ImageClassifierHelper(
@@ -99,7 +24,7 @@ class ImageClassifierHelper(
     val context: Context,
     val imageClassifierListener: ClassifierListener?
 ) {
-    private var panopticNetModel: BestFloat32? = null
+    private var panopticNetModel: PanopticNET? = null
 
     init {
         setupPanopticNetModel()
@@ -107,78 +32,117 @@ class ImageClassifierHelper(
 
     fun setupPanopticNetModel() {
         try {
-            panopticNetModel = BestFloat32.newInstance(context)
+            panopticNetModel = PanopticNET.newInstance(context)
         } catch (e: Exception) {
             imageClassifierListener?.onError(
                 "PanopticNET model failed to initialize. See error logs for details"
             )
             Log.e(
-                "ImageClassifierHelper",
-                "PanopticNET failed to load model with error: ${e.message}"
+                "ImageClassifierHelper", "PanopticNET failed to load model with error: ${e.message}"
             )
         }
     }
 
     private var imageProcessor =
-        ImageProcessor.Builder().add(ResizeOp(320, 320, ResizeOp.ResizeMethod.BILINEAR)).build()
+        ImageProcessor.Builder().add(ResizeOp(320, 320, ResizeOp.ResizeMethod.BILINEAR))
+            .add(NormalizeOp(0.0f, 255.0f)).build()
+
+//    private val handler = Handler(Looper.getMainLooper())
+//    private val analysisInterval = 1000L // Jarak waktu dalam milidetik (5000ms = 5 detik)
+
+    private var lastAnalysisTime: Long = 0
+    private val analysisInterval = 5000L // Jarak waktu dalam milidetik (misalnya, 5000ms = 5 detik)
 
     @SuppressLint("UnsafeOptInUsageError")
     fun classify(image: ImageProxy) {
+
+        /// ==================
+//
+//        if (panopticNetModel == null) {
+//            setupPanopticNetModel()
+//        }
+//
+//        val bitmap = imageProxyToBitmap(image)
+//
+//        var tensorImage: TensorImage = TensorImage(DataType.FLOAT32)
+//        tensorImage.load(bitmap)
+//
+//
+//        tensorImage = imageProcessor.process(tensorImage)
+//
+//        var inferenceTime = SystemClock.uptimeMillis()
+//        val inputFeature0 =
+//            TensorBuffer.createFixedSize(intArrayOf(1, 320, 320, 3), DataType.FLOAT32)
+//
+//
+//        // Print normalized values (just an example)
+//        //        for (i in 0 until 3) {
+//        //            Log.d("Normalized Value at index $i : ", tensorImage.tensorBuffer.getFloatValue(i).toString())
+//        //        }
+//
+//
+//        inputFeature0.loadBuffer(tensorImage.buffer)
+//            val outputs = panopticNetModel?.process(inputFeature0)
+//            inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+//            val outputTensor = outputs?.outputFeature0AsTensorBuffer
+//
+//
+//            if (outputTensor != null) {
+//                Log.d("confidence score", outputTensor.floatArray[0].toString())
+//            }
+//
+//        //  imageClassifierListener?.onResults(
+//        //  outputTensor!!.floatArray[1],
+//        //             inferenceTime
+//        //   )
+//
+//            bitmap.recycle()
+//
+
+        ////===============
+
         if (panopticNetModel == null) {
             setupPanopticNetModel()
         }
 
-//        val bitmapBuffer = Bitmap.createBitmap(
-//            image.width, image.height, Bitmap.Config.ARGB_8888
-//        )
-//        image.use { bitmapBuffer.copyPixelsFromBuffer(image.planes[0].buffer) }
-//        image.close()
+        val bitmap = imageProxyToBitmap(image)
 
-//        val byteCount = bitmapBuffer.byteCount
-//
-//        val byteBuffer = ByteBuffer.allocate(byteCount)
-//
-//        bitmapBuffer.copyPixelsToBuffer(byteBuffer)
+        var tensorImage: TensorImage = TensorImage(DataType.FLOAT32)
+        tensorImage.load(bitmap)
 
-        var bitmap = imageProxyToBitmap(image)
+        tensorImage = imageProcessor.process(tensorImage)
 
-        var byteBuffer = TensorImage(DataType.FLOAT32)
-        byteBuffer.load(bitmap)
-        byteBuffer = imageProcessor.process(byteBuffer)
+//        val inferenceTime = SystemClock.uptimeMillis()
+        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 320, 320, 3), DataType.FLOAT32)
 
-        var inferenceTime = SystemClock.uptimeMillis()
-        val inputFeature0 =
-            TensorBuffer.createFixedSize(intArrayOf(1, 320, 320, 3), DataType.FLOAT32)
+        inputFeature0.loadBuffer(tensorImage.buffer)
 
-        inputFeature0.loadBuffer(byteBuffer.buffer)
+        val currentTime = SystemClock.uptimeMillis()
 
-        val outputs = panopticNetModel?.process(inputFeature0)
+        // Periksa apakah sudah waktunya untuk menjalankan analisis berikutnya
+        if (currentTime - lastAnalysisTime >= analysisInterval) {
+            val outputs = panopticNetModel?.process(inputFeature0)
+//            val inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+            val outputTensor = outputs?.outputFeature0AsTensorBuffer
 
+            if (outputTensor != null) {
+                Log.d("confidence score", outputTensor.floatArray[0].toString())
+            }
 
-        inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+            // Tetapkan waktu terakhir analisis menjadi waktu saat ini
+            lastAnalysisTime = currentTime
 
-        val outputTensor = outputs?.outputAsCategoryList
+            // Lanjutkan atau lakukan tindakan lain setelah analisis selesai
 
-
-        // Mengekstrak confidence scores dari tensor
-        val confidenceScores = outputTensor?.get(0)
-
-        // Contoh: Jika confidence_scores berada di indeks pertama
-//        val confidenceScore = confidenceScores
-//
-//        if (confidenceScore != null) {
-//            println("Confidence Score: $confidenceScore")
-//        } else {
-//            println("Confidence Score tidak tersedia.")
-//        }
-//            Log.d("RESULT", outputFeature0?.getFloatValue(0).toString() + "ini apa njer: " + outputFeature0?.getFloatValue(1))
-
-
-        imageClassifierListener?.onResults(
-            confidenceScores,
-            inferenceTime
-        )
+            // Recycle bitmap
+            bitmap.recycle()
+        } else {
+            // Jika belum waktunya untuk analisis, lakukan sesuatu yang lain atau lewati
+            Log.d("Analysis", "Belum waktunya untuk analisis")
+        }
     }
+
+
     fun imageProxyToBitmap(imageProxy: ImageProxy): Bitmap {
         val image: Image = imageProxy.image ?: throw IllegalStateException("Image is null")
 
@@ -205,32 +169,10 @@ class ImageClassifierHelper(
         return bitmap
     }
 
-    private fun getOrientationFromRotation(rotation: Int): ImageProcessingOptions.Orientation {
-        return when (rotation) {
-            Surface.ROTATION_270 -> ImageProcessingOptions.Orientation.BOTTOM_RIGHT
-            Surface.ROTATION_180 -> ImageProcessingOptions.Orientation.RIGHT_BOTTOM
-            Surface.ROTATION_90 -> ImageProcessingOptions.Orientation.TOP_LEFT
-            else -> ImageProcessingOptions.Orientation.RIGHT_TOP
-        }
-    }
-
     interface ClassifierListener {
         fun onError(error: String)
         fun onResults(
-            results: Category?, inferenceTime: Long
+            results: Float, inferenceTime: Long
         )
     }
 }
-
-
-// input
-//    name: image
-//    type: Image<float32>
-//    shape: [1, 640,  640, 3]
-//    min/max: []/[]
-
-// output
-// type: Unknown<float32>
-// description: coordinates of detected objects, class labels, and confidence score
-// shape: [1, 5, 8400]
-// min/max: []/[]
